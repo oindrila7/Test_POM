@@ -1,5 +1,6 @@
 package Utils;
 
+import io.qameta.allure.Allure;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,6 +31,12 @@ public class Utils {
         File DestFile = new File(fileWithPath);
         FileUtils.copyFile(screenshotFile, DestFile);
     }
+    public String generateRandomEmail(int min, int max) {
+        double id= Math.random()*(max-min)+min;
+        String email="test"+(int)id+"@grr.la";
+        return email;
+    }
+
     private String email;
     private String password;
 
@@ -49,23 +56,39 @@ public class Utils {
         this.password = password;
     }
 
+    public void readJSONFile() throws IOException, ParseException {
+        JSONParser jsonParser = new JSONParser();
+        Object obj = jsonParser.parse(new FileReader("./src/test/resources/user.json"));
+        JSONObject userObj = (JSONObject) obj;
+
+        setEmail((String)userObj.get("email"));
+        setPassword((String)userObj.get("password"));
+
+    }
     public void readJSONArray(int pos) throws IOException, ParseException, ParseException {
 
         String fileName = "./src/test/resources/users.json";
         JSONParser jsonParser = new JSONParser();
         Object obj = jsonParser.parse(new FileReader(fileName));
         JSONArray jsonArray = (JSONArray) obj;
-        JSONObject jsonObj = (JSONObject) jsonArray.get(pos);
+        JSONObject json = (JSONObject) jsonArray.get(pos);
 
-        setEmail((String) jsonObj.get("email"));
-        setPassword((String) jsonObj.get("password"));
+        setEmail((String) json.get("email"));
+        setPassword((String) json.get("password"));
 
     }
-    public String generateRandomEmail(int min, int max){
-        double id= Math.random()*(max-min)+min;
-        return "test"+(int)id+"@test.com";
-    }
 
+    public void addDescription(String data) throws Exception
+    {
+        try{
+            Allure.description(data);
+        }
+        catch(Exception e)
+        {
+            System.out.print(e.toString());
+        }
+
+    }
 
 
 }
